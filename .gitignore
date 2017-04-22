@@ -1,0 +1,9 @@
+.classpath
+.project
+.cproject
+*.tmp.cpp
+*.s
+*.o
+*.i
+*.ii
+*.avr
