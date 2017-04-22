@@ -19,4 +19,4 @@ firmware.avr: firmware.tmp.cpp
 	hex2bin firmware.hex
 
 clean:
-	rm -f *.ii *.o *.i *.s *.a *.avr *.tmp.cpp *.hex
+	rm -f *.ii *.o *.i *.s *.a *.avr *.tmp.cpp *.hex *.bin
