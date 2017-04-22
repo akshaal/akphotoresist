@@ -15,6 +15,7 @@ firmware.tmp.cpp: ${SRCS} ${AKAT_SRCS}
 firmware.avr: firmware.tmp.cpp
 	${CXX} ${CXXFLAGS} -Os "$<" -DAKAT_DEBUG_OFF -save-temps -o $@
 	${OBJDUMP} -d $@ > $@.s
+	${OBJCOPY} -j .text -j .data -O ihex firmware.avr firmware.hex
 
 clean:
-	rm -f *.ii *.o *.i *.s *.a *.avr *.tmp.cpp
+	rm -f *.ii *.o *.i *.s *.a *.avr *.tmp.cpp *.hex
