@@ -1,0 +1,8 @@
+#!/bin/sh
+
+./build || exit
+
+echo
+echo "Flushing..."
+
+avrdude -c pinboard -p t2313 -B 9600 -U flash:w:src/firmware.hex:a
