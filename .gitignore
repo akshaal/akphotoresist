@@ -2,6 +2,7 @@
 .project
 .cproject
 *.tmp.cpp
+*.tmp.c
 *.s
 *.o
 *.i
@@ -9,3 +10,4 @@
 *.avr
 *.hex
 *.bin
+*.cflags
