@@ -5,7 +5,9 @@
 *.tmp.c
 *.s
 *.o
+*.out
 *.i
+*.res
 *.ii
 *.avr
 *.hex

@@ -10,9 +10,13 @@ X_GPIO_OUTPUT$(error_led, B0);
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
 
-X_FULL_BUTTON$(button1, D2) {
+X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_press()) {
         error_led.set(1);
+    }
+
+    METHOD$(void on_repeat()) {
+        error_led.set(timestamp.get_deciseconds() & 1);
     }
 
     METHOD$(void on_release()) {
