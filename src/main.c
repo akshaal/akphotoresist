@@ -23,6 +23,15 @@ X_BUZZER$(buzzer, min_freq = 1000, max_freq = 15000);
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
 
+// Define display
+X_TM1637$(tm1637, clk = B3, dio = B4);
+
+// Connect display to timestamp
+X_TM1637_TIME$(tm1637_time, timestamp, tm1637, condition = 1);
+
+// Support for flashing
+X_TM1637_FLASH$(tm1637_flash, tm1637);
+
 X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_press()) {
         error_led.set(1);
@@ -51,5 +60,6 @@ X_MAIN$(cpu_freq = 1000000) {
     timestamp.reset();
     c.start();
     buzzer.set_freq(11000);
+    tm1637_flash.start_pos_1();
     sei();
 }

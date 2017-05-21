@@ -5,4 +5,4 @@
 echo
 echo "Flushing..."
 
-avrdude -c pinboard -p t2313 -B 9600 -U flash:w:src/firmware.hex:a
+avrdude -c pinboard -p t2313 -B 2400 -U flash:w:src/firmware.hex:a
