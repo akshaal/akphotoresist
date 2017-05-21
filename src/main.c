@@ -7,6 +7,19 @@ WRITE_CFLAGS$(firmware);
 // Declare error led
 X_GPIO_OUTPUT$(error_led, B0);
 
+// Declare error handler
+X_FATAL_ERROR_HANDLER$() {
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (code > 0) {
+        error_led.set(1);
+    }
+
+    while(1) {};
+}
+
+// Buzzer on PB2 (on attiny2313)
+X_BUZZER$(buzzer, min_freq = 1000, max_freq = 15000);
+
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
 
@@ -37,5 +50,6 @@ X_TIMESTAMP_CALLBACKS$(timestamp) {
 X_MAIN$(cpu_freq = 1000000) {
     timestamp.reset();
     c.start();
+    buzzer.set_freq(11000);
     sei();
 }
