@@ -59,7 +59,7 @@ X_TIMESTAMP_CALLBACKS$(timestamp) {
 X_MAIN$(cpu_freq = 1000000) {
     timestamp.reset();
     c.start();
-    buzzer.set_freq(11000);
+    buzzer.set_freq(1000);
     tm1637_flash.start_pos_1();
     sei();
 }
