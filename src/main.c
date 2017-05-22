@@ -4,6 +4,8 @@
 
 WRITE_CFLAGS$(firmware);
 
+X_CPU$(cpu_freq = 1061658);
+
 // Declare error led
 X_GPIO_OUTPUT$(error_led, B0);
 
@@ -18,7 +20,15 @@ X_FATAL_ERROR_HANDLER$() {
 }
 
 // Buzzer on PB2 (on attiny2313)
-X_BUZZER$(buzzer, min_freq = 1000, max_freq = 15000);
+X_BUZZER$(buzzer);
+
+// Key press
+X_BUZZER_SOUNDS$(
+    button_press_sounds,
+    sounds = (
+        1 @ 433,
+        2 @ 1000,
+        1 @ 1500))
 
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
@@ -35,6 +45,7 @@ X_TM1637_FLASH$(tm1637_flash, tm1637);
 X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_press()) {
         error_led.set(1);
+        buzzer.play(button_press_sounds, NULL);
     }
 
     METHOD$(void on_repeat()) {
@@ -56,10 +67,11 @@ X_TIMESTAMP_CALLBACKS$(timestamp) {
 }
 
 // Main
-X_MAIN$(cpu_freq = 1000000) {
+X_MAIN$() {
     timestamp.reset();
+    timestamp.set_hours(0, 1);
+    timestamp.set_minutes(0, 2);
     c.start();
-    buzzer.set_freq(1000);
     tm1637_flash.start_pos_1();
     sei();
 }
