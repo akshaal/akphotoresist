@@ -22,13 +22,9 @@ X_FATAL_ERROR_HANDLER$() {
 // Buzzer on PB2 (on attiny2313)
 X_BUZZER$(buzzer);
 
-// Key press
-X_BUZZER_SOUNDS$(
-    button_press_sounds,
-    sounds = (
-        1 @ 433,
-        2 @ 1000,
-        1 @ 1500))
+// Sounds
+X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
+X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
 
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
@@ -44,8 +40,8 @@ X_TM1637_FLASH$(tm1637_flash, tm1637);
 
 X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_press()) {
+        buzzer.play(finish_sounds, NULL);
         error_led.set(1);
-        buzzer.play(button_press_sounds, NULL);
     }
 
     METHOD$(void on_repeat()) {
@@ -69,9 +65,8 @@ X_TIMESTAMP_CALLBACKS$(timestamp) {
 // Main
 X_MAIN$() {
     timestamp.reset();
-    timestamp.set_hours(0, 1);
-    timestamp.set_minutes(0, 2);
     c.start();
     tm1637_flash.start_pos_1();
+    buzzer.play(startup_sounds, NULL);
     sei();
 }
