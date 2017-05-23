@@ -4,6 +4,9 @@
 
 WRITE_CFLAGS$(firmware);
 
+// TODO: Remove it and add again based upon frequency produced by akatv
+USE_REG$(tm1637__dirty);
+
 X_CPU$(cpu_freq = 1061658);
 
 // Declare error led

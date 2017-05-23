@@ -17,6 +17,7 @@ firmware.avr: firmware.tmp.c
 		${OBJDUMP} -d $@ > $@.s && \
 		${OBJCOPY} -j .text -j .data -O ihex firmware.avr firmware.hex && \
 		${SIZE} $@ && \
+		${AKATV} $@.s && \
 		hex2bin firmware.hex
 
 clean:
