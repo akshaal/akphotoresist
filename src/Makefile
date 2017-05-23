@@ -10,7 +10,7 @@ all: firmware.avr
 distclean: clean
 
 firmware.tmp.c: ${SRCS} ${AKAT_SRCS}
-	${AKATPP} ${AKATPP_OPTS} ${AKAT_SRCS} ${SRCS} > "firmware.tmp.c"
+	${AKATPP} ${AKATPP_OPTS} ${AKAT_SRCS} ${SRCS} > "firmware.tmp.c" || rm "firmware.tmp.c"
 
 firmware.avr: firmware.tmp.c
 	XX=`cat firmware.cflags` && ${CC} -Os ${CFLAGS} $$XX "$<" -save-temps -o $@ && \
