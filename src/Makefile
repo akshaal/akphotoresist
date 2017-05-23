@@ -16,6 +16,7 @@ firmware.avr: firmware.tmp.c
 	XX=`cat firmware.cflags` && ${CC} -Os ${CFLAGS} $$XX "$<" -save-temps -o $@ && \
 		${OBJDUMP} -d $@ > $@.s && \
 		${OBJCOPY} -j .text -j .data -O ihex firmware.avr firmware.hex && \
+		${SIZE} $@ && \
 		hex2bin firmware.hex
 
 clean:
