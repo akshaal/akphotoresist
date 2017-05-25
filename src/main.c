@@ -32,6 +32,7 @@ X_BUZZER$(buzzer);
 // Sounds
 X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
 X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
+X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
@@ -61,6 +62,18 @@ X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_release()) {
         error_led.set(0);
     }
+}
+
+X_BUTTON$(button2, D3) {
+    buzzer.play(button_sound, NULL);
+}
+
+X_BUTTON$(button3, D4) {
+    buzzer.play(button_sound, NULL);
+}
+
+X_BUTTON$(button4, D5) {
+    buzzer.play(button_sound, NULL);
 }
 
 X_TIMESTAMP_CALLBACKS$(timestamp) {
