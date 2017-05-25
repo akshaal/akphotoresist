@@ -40,6 +40,7 @@ X_BUZZER$(buzzer);
 
 // Sounds
 X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
+X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=700: e5, e6, e7")
 X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
 X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
@@ -144,6 +145,7 @@ X_BUTTON_LONG$(button4, D3) {
     METHOD$(void on_long_press()) {
         if (state == STATE_PREPARE) {
             state = STATE_COUNTDOWN;
+            buzzer.play(start_sounds, NULL);
             countdown.start();
         }
     }
