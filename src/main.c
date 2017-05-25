@@ -22,18 +22,9 @@ USE_REG$(tm1637__byte4, low);
 
 X_CPU$(cpu_freq = 1061658);
 
-// Declare error led
+// Declare error led and handler for fatal errors
 X_GPIO_OUTPUT$(error_led, B0);
-
-// Declare error handler
-X_FATAL_ERROR_HANDLER$() {
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (code > 0) {
-        error_led.set(1);
-    }
-
-    while(1) {};
-}
+X_FATAL_ERROR_HANDLER_LED$(error_led);
 
 // Buzzer on PB2 (on attiny2313)
 X_BUZZER$(buzzer);
