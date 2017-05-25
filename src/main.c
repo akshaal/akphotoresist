@@ -40,7 +40,8 @@ X_BUZZER$(buzzer);
 
 // Sounds
 X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
-X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=700: e5, e6, e7")
+X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=1000: e, b, a")
+X_BUZZER_RTTL$(stop_sounds, "d=1, o=5, b=1000: a, b, e")
 X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
 X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
@@ -102,7 +103,18 @@ FUNCTION$(void cycle_predefs()) {
     }
 }
 
+FUNCTION$(void init_predef_mode()) {
+    state = STATE_PREPARE;
+    set_predef1();
+}
+
 // - - - - - - - - -  - - - - - - - Buttons
+
+FUNCTION$(void init_predef_mode_on_done_press()) {
+    if (state == STATE_DONE) {
+        init_predef_mode();
+    }
+}
 
 // Button1: up
 // Button2: down
@@ -112,6 +124,7 @@ FUNCTION$(void cycle_predefs()) {
 X_BUTTON_REPEAT$(button1, D4) {
     METHOD$(void on_press()) {
         buzzer.play(button_sound, NULL);
+        init_predef_mode_on_done_press();
     }
 
     METHOD$(void on_repeat()) {
@@ -123,6 +136,7 @@ X_BUTTON_REPEAT$(button1, D4) {
 X_BUTTON_REPEAT$(button2, D5) {
     METHOD$(void on_press()) {
         buzzer.play(button_sound, NULL);
+        init_predef_mode_on_done_press();
     }
 
     METHOD$(void on_repeat()) {
@@ -132,6 +146,7 @@ X_BUTTON_REPEAT$(button2, D5) {
 }
 
 X_BUTTON$(button3, D2) {
+    init_predef_mode_on_done_press();
 }
 
 X_BUTTON_LONG$(button4, D3) {
@@ -139,6 +154,8 @@ X_BUTTON_LONG$(button4, D3) {
         if (state == STATE_PREPARE) {
             buzzer.play(button_sound, NULL);
             cycle_predefs();
+        } else {
+            init_predef_mode_on_done_press();
         }
     }
 
@@ -147,6 +164,10 @@ X_BUTTON_LONG$(button4, D3) {
             state = STATE_COUNTDOWN;
             buzzer.play(start_sounds, NULL);
             countdown.start();
+        } else if (state == STATE_COUNTDOWN) {
+            state = STATE_PREPARE;
+            buzzer.play(stop_sounds, NULL);
+            countdown.stop();
         }
     }
 
@@ -155,7 +176,7 @@ X_BUTTON_LONG$(button4, D3) {
 
 // Main
 X_MAIN$() {
-    set_predef1();
+    init_predef_mode();
 //    tm1637_flash.start_pos_1();
 //    tm1637_flash.start_pos_2();
     buzzer.play(startup_sounds, NULL);
