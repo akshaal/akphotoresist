@@ -112,7 +112,12 @@ FUNCTION$(void init_predef_mode()) {
 
 FUNCTION$(void init_predef_mode_on_done_press()) {
     if (state == STATE_DONE) {
+        // Order is important
         buzzer.play(button_sound, NULL);
+        tm1637_flash.stop_pos_1();
+        tm1637_flash.stop_pos_2();
+        tm1637_flash.stop_pos_3();
+        tm1637_flash.stop_pos_4();
         init_predef_mode();
     }
 }
