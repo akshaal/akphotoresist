@@ -5,8 +5,8 @@ WRITE_CFLAGS$(firmware);
 
 // TODO: Remove it and add again based upon frequency produced by akatv
 // NOTE: Sometimes it's nice to try to see which one is best to have some not low, must try some combinations
-/*USE_REG$(tm1637__dirty, low);
-USE_REG$(tm1637__thread__akat_coroutine_state);
+USE_REG$(tm1637__dirty, low);
+USE_REG$(buzzer__play_deciseconds, low);
 USE_REG$(akat_timestamp_hour_l__timestamp, low);
 USE_REG$(akat_timestamp_hour_h__timestamp, low);
 USE_REG$(akat_timestamp_minute_l__timestamp, low);
@@ -17,7 +17,8 @@ USE_REG$(akat_timestamp_decisecond__timestamp, low);
 USE_REG$(tm1637__byte1, low);
 USE_REG$(tm1637__byte2, low);
 USE_REG$(tm1637__byte3, low);
-USE_REG$(tm1637__byte4, low);*/
+USE_REG$(tm1637__byte4, low);
+USE_REG$(state);
 
 X_CPU$(cpu_freq = 1061658);
 
