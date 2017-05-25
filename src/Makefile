@@ -18,7 +18,7 @@ firmware.avr: firmware.tmp.c
 		${OBJCOPY} -j .text -j .data -O ihex firmware.avr firmware.hex && \
 		${NM} --print-size --size-sort --radix=d firmware.avr && \
 		${SIZE} $@ && \
-		${AKATV} $@.s && \
+		${AKATV} firmware.avr.ltrans0.s && \
 		hex2bin firmware.hex
 
 clean:
