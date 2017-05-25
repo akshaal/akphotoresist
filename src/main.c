@@ -118,9 +118,11 @@ FUNCTION$(void init_prepare_mode()) {
 // - - - - - - - - -  - - - - - - - Hour indication
 
 X_EVERY_DECISECOND$(hour_indicator) {
-    if (state != STATE_DONE) {
-        indicator_led.set(timestamp.get_deciseconds() & AKAT_ONE);
-    }
+    u8 const on =
+        (timestamp.get_hours_l() != 0 || timestamp.get_hours_h() != 0)
+        && (timestamp.get_deciseconds() & AKAT_ONE);
+
+    indicator_led.set(on);
 }
 
 // - - - - - - - - -  - - - - - - - Buttons
