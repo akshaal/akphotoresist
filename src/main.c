@@ -210,8 +210,6 @@ X_BUTTON_LONG$(button4, D3) {
 // Main
 X_MAIN$() {
     init_prepare_mode();
-//    tm1637_flash.start_pos_1();
-//    tm1637_flash.start_pos_2();
     buzzer.play(startup_sounds, NULL);
     sei();
 }
