@@ -23,8 +23,15 @@ USE_REG$(state);
 X_CPU$(cpu_freq = 1061658);
 
 // 50 shades of state and such
-typedef enum { STATE_PREPARE = 0, STATE_COUNTDOWN, STATE_DONE } state_t;
-typedef enum { PREDEF1 = 0, PREDEF2, PREDEF3 } predef_t;
+#define STATE_PREPARE       0
+#define STATE_COUNTDOWN     AKAT_ONE
+#define STATE_DONE          2
+#define PREDEF1       0
+#define PREDEF2       AKAT_ONE
+#define PREDEF3       2
+
+typedef u8 state_t;
+typedef u8 predef_t;
 
 GLOBAL$() {
     STATIC_VAR$(state_t state, initial = STATE_PREPARE);
@@ -122,18 +129,20 @@ FUNCTION$(void init_predef_mode_on_done_press()) {
     }
 }
 
-// Button1: up
-// Button2: down
-// Button3: select digit
-// Button4: short, change predef: long: start
-
 X_BUTTON_REPEAT$(button1, D4) {
     METHOD$(void on_press()) {
-        buzzer.play(button_sound, NULL);
-        init_predef_mode_on_done_press();
+        if (state == STATE_PREPARE) {
+            buzzer.play(button_sound, NULL);
+            // TODO: Decrement current position
+        } else {
+            init_predef_mode_on_done_press();
+        }
     }
 
     METHOD$(void on_repeat()) {
+        if (state == STATE_PREPARE) {
+            // TODO: Decrement current position faster
+        }
     }
 
     METHOD$(void on_release()) {}
@@ -141,17 +150,25 @@ X_BUTTON_REPEAT$(button1, D4) {
 
 X_BUTTON_REPEAT$(button2, D5) {
     METHOD$(void on_press()) {
-        buzzer.play(button_sound, NULL);
-        init_predef_mode_on_done_press();
+        if (state == STATE_PREPARE) {
+            buzzer.play(button_sound, NULL);
+            // TODO: Increment current position
+        } else {
+            init_predef_mode_on_done_press();
+        }
     }
 
     METHOD$(void on_repeat()) {
+        if (state == STATE_PREPARE) {
+            // TODO: Increment current position faster
+        }
     }
 
     METHOD$(void on_release()) {}
 }
 
 X_BUTTON$(button3, D2) {
+    // TODO: Select current position
     init_predef_mode_on_done_press();
 }
 
