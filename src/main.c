@@ -112,6 +112,7 @@ FUNCTION$(void init_predef_mode()) {
 
 FUNCTION$(void init_predef_mode_on_done_press()) {
     if (state == STATE_DONE) {
+        buzzer.play(button_sound, NULL);
         init_predef_mode();
     }
 }
