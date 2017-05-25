@@ -39,8 +39,8 @@ GLOBAL$() {
 }
 
 // Declare error led and handler for fatal errors
-X_GPIO_OUTPUT$(error_led, B0);
-X_FATAL_ERROR_HANDLER_LED$(error_led);
+X_GPIO_OUTPUT$(indicator_led, B0);
+X_FATAL_ERROR_HANDLER_LED$(indicator_led);
 
 // Buzzer on PB2 (on attiny2313)
 X_BUZZER$(buzzer);
@@ -110,14 +110,22 @@ FUNCTION$(void cycle_predefs()) {
     }
 }
 
-FUNCTION$(void init_predef_mode()) {
+FUNCTION$(void init_prepare_mode()) {
     state = STATE_PREPARE;
     set_predef1();
 }
 
+// - - - - - - - - -  - - - - - - - Hour indication
+
+X_EVERY_DECISECOND$(hour_indicator) {
+    if (state != STATE_DONE) {
+        indicator_led.set(timestamp.get_deciseconds() & AKAT_ONE);
+    }
+}
+
 // - - - - - - - - -  - - - - - - - Buttons
 
-FUNCTION$(void init_predef_mode_on_done_press()) {
+FUNCTION$(void init_prepare_mode_on_done_press()) {
     if (state == STATE_DONE) {
         // Order is important
         buzzer.play(button_sound, NULL);
@@ -125,7 +133,7 @@ FUNCTION$(void init_predef_mode_on_done_press()) {
         tm1637_flash.stop_pos_2();
         tm1637_flash.stop_pos_3();
         tm1637_flash.stop_pos_4();
-        init_predef_mode();
+        init_prepare_mode();
     }
 }
 
@@ -135,7 +143,7 @@ X_BUTTON_REPEAT$(button1, D4) {
             buzzer.play(button_sound, NULL);
             // TODO: Decrement current position
         } else {
-            init_predef_mode_on_done_press();
+            init_prepare_mode_on_done_press();
         }
     }
 
@@ -154,7 +162,7 @@ X_BUTTON_REPEAT$(button2, D5) {
             buzzer.play(button_sound, NULL);
             // TODO: Increment current position
         } else {
-            init_predef_mode_on_done_press();
+            init_prepare_mode_on_done_press();
         }
     }
 
@@ -169,7 +177,7 @@ X_BUTTON_REPEAT$(button2, D5) {
 
 X_BUTTON$(button3, D2) {
     // TODO: Select current position
-    init_predef_mode_on_done_press();
+    init_prepare_mode_on_done_press();
 }
 
 X_BUTTON_LONG$(button4, D3) {
@@ -178,7 +186,7 @@ X_BUTTON_LONG$(button4, D3) {
             buzzer.play(button_sound, NULL);
             cycle_predefs();
         } else {
-            init_predef_mode_on_done_press();
+            init_prepare_mode_on_done_press();
         }
     }
 
@@ -199,7 +207,7 @@ X_BUTTON_LONG$(button4, D3) {
 
 // Main
 X_MAIN$() {
-    init_predef_mode();
+    init_prepare_mode();
 //    tm1637_flash.start_pos_1();
 //    tm1637_flash.start_pos_2();
     buzzer.play(startup_sounds, NULL);
