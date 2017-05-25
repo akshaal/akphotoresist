@@ -39,11 +39,14 @@ X_TIMESTAMP$(timestamp);
 // Define display
 X_TM1637$(tm1637, clk = B3, dio = B4);
 
-// Connect display to timestamp
+// Connect display to timestamp, condition tells when we display data
 X_TM1637_TIME$(tm1637_time, timestamp, tm1637, condition = 1);
 
-// Support for flashing
+// Support for flashing of information on TM1637 display
 X_TM1637_FLASH$(tm1637_flash, tm1637);
+
+// Clock (timer) which controls timestamp
+X_CLOCK$(clock, timestamp);
 
 X_BUTTON_REPEAT$(button1, D2) {
     METHOD$(void on_press()) {
@@ -60,9 +63,6 @@ X_BUTTON_REPEAT$(button1, D2) {
     }
 }
 
-
-X_CLOCK$(c, timestamp);
-
 X_TIMESTAMP_CALLBACKS$(timestamp) {
     METHOD$(void on_new_second_l(), inline) {
         error_led.set(timestamp.get_seconds_l() & 1);
@@ -71,8 +71,7 @@ X_TIMESTAMP_CALLBACKS$(timestamp) {
 
 // Main
 X_MAIN$() {
-    timestamp.reset();
-    c.start();
+    clock.start();
     tm1637_flash.start_pos_1();
     buzzer.play(startup_sounds, NULL);
     sei();
