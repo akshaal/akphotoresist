@@ -193,6 +193,35 @@ FUNCTION$(void decrement_selection_position()) {
     start_selection_flashing();
 }
 
+FUNCTION$(void increment_selection_position()) {
+    stop_selection_flashing();
+
+    if (select_first) {
+        if (timestamp.has_hours()) {
+            timestamp.inc_hours();
+        } else {
+            if (timestamp.has_minutes()) {
+                timestamp.inc_minutes();
+            } else {
+                timestamp.inc_seconds();
+            }
+        }
+    } else {
+        if (timestamp.has_hours()) {
+            timestamp.inc_minutes();
+        } else {
+            if (timestamp.has_minutes()) {
+                timestamp.inc_seconds();
+            } else {
+                timestamp.inc_deciseconds();
+            }
+        }
+    }
+
+    start_selection_flashing();
+}
+
+
 // - - - - - - - - -  - - - - - - - Buttons
 
 FUNCTION$(void init_prepare_mode_on_done_press()) {
@@ -227,7 +256,7 @@ X_BUTTON_REPEAT$(button2, D5) {
     METHOD$(void on_press()) {
         if (state == STATE_PREPARE) {
             play_button_sound();
-            // TODO: Increment current position
+            increment_selection_position();
         } else {
             init_prepare_mode_on_done_press();
         }
@@ -235,7 +264,7 @@ X_BUTTON_REPEAT$(button2, D5) {
 
     METHOD$(void on_repeat()) {
         if (state == STATE_PREPARE) {
-            // TODO: Increment current position faster
+            increment_selection_position();
         }
     }
 
