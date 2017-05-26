@@ -5,6 +5,8 @@ include ${AKAT_DIR}/src/akat.Makefile
 MCU=attiny2313
 SRCS=main.c
 
+PROJ_CFLAGS=
+
 all: firmware.avr
 
 distclean: clean
@@ -13,7 +15,7 @@ firmware.tmp.c: ${SRCS} ${AKAT_SRCS}
 	${AKATPP} ${AKATPP_OPTS} ${AKAT_SRCS} ${SRCS} > "firmware.tmp.c" || rm "firmware.tmp.c"
 
 firmware.avr: firmware.tmp.c
-	XX=`cat firmware.cflags` && ${CC} -Os ${CFLAGS} $$XX "$<" -save-temps -o $@ && \
+	  XX=`cat firmware.cflags` && ${CC} -Os ${CFLAGS} ${PROJ_CFLAGS} $$XX "$<" -save-temps -o $@ && \
 		${OBJDUMP} -d $@ > $@.s && \
 		${OBJCOPY} -j .text -j .data -O ihex firmware.avr firmware.hex && \
 		${NM} --print-size --size-sort --radix=d firmware.avr && \
