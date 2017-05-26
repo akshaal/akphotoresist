@@ -6,7 +6,10 @@ WRITE_CFLAGS$(firmware);
 // TODO: Remove it and add again based upon frequency produced by akatv
 // NOTE: Sometimes it's nice to try to see which one is best to have some not low, must try some combinations
 USE_REG$(tm1637__dirty, low);
-USE_REG$(buzzer__play_deciseconds, low);
+USE_REG$(tm1637__byte1, low);
+USE_REG$(tm1637__byte2, low);
+USE_REG$(tm1637__byte3, low);
+USE_REG$(tm1637__byte4, low);
 USE_REG$(akat_timestamp_hour_l__timestamp, low);
 USE_REG$(akat_timestamp_hour_h__timestamp, low);
 USE_REG$(akat_timestamp_minute_l__timestamp, low);
@@ -14,11 +17,7 @@ USE_REG$(akat_timestamp_minute_h__timestamp, low);
 USE_REG$(akat_timestamp_second_l__timestamp, low);
 USE_REG$(akat_timestamp_second_h__timestamp, low);
 USE_REG$(akat_timestamp_decisecond__timestamp, low);
-USE_REG$(tm1637__byte1, low);
-USE_REG$(tm1637__byte2, low);
-USE_REG$(tm1637__byte3, low);
-USE_REG$(tm1637__byte4, low);
-
+USE_REG$(buzzer__play_deciseconds, low);
 USE_REG$(state);
 
 X_CPU$(cpu_freq = 1061658);
@@ -37,7 +36,7 @@ typedef u8 predef_t;
 GLOBAL$() {
     STATIC_VAR$(state_t state, initial = STATE_PREPARE);
     STATIC_VAR$(predef_t predef, initial = PREDEF1);
-    STATIC_VAR$(u8 select_first);
+    STATIC_VAR$(u8 select_second);
 }
 
 // Declare error led and handler for fatal errors
@@ -90,7 +89,7 @@ X_COUNTDOWN$(countdown, timestamp) {
 // - - - - - - - - -  - - - - - - - Selection
 
 FUNCTION$(void stop_selection_flashing()) {
-    if (select_first) {
+    if (select_second) {
         tm1637_flash.stop_pos_1();
         tm1637_flash.stop_pos_2();
     } else {
@@ -100,7 +99,7 @@ FUNCTION$(void stop_selection_flashing()) {
 }
 
 FUNCTION$(void start_selection_flashing()) {
-    if (select_first) {
+    if (select_second) {
         tm1637_flash.start_pos_1();
         tm1637_flash.start_pos_2();
     } else {
@@ -111,7 +110,7 @@ FUNCTION$(void start_selection_flashing()) {
 
 FUNCTION$(void cycle_selection_flashing()) {
     stop_selection_flashing();
-    select_first = ~select_first;
+    select_second = ~select_second;
     start_selection_flashing();
 }
 
@@ -149,7 +148,7 @@ FUNCTION$(void cycle_predefs()) {
 
 FUNCTION$(void init_prepare_mode()) {
     state = STATE_PREPARE;
-    select_first = 0;
+    select_second = 0;
     set_predef1();
     start_selection_flashing();
 }
