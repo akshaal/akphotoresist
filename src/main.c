@@ -167,21 +167,21 @@ X_EVERY_DECISECOND$(hour_indicator) {
 FUNCTION$(void decrement_selection_position()) {
     stop_selection_flashing();
 
-    if (select_first) {
-        if (timestamp.has_hours()) {
+    if (timestamp.has_hours()) {
+        if (select_first) {
             timestamp.dec_hours();
         } else {
-            if (timestamp.has_minutes()) {
+            timestamp.dec_minutes();
+        }
+    } else {
+        if (timestamp.has_minutes()) {
+            if (select_first) {
                 timestamp.dec_minutes();
             } else {
                 timestamp.dec_seconds();
             }
-        }
-    } else {
-        if (timestamp.has_hours()) {
-            timestamp.dec_minutes();
         } else {
-            if (timestamp.has_minutes()) {
+            if (select_first) {
                 timestamp.dec_seconds();
             } else {
                 timestamp.dec_deciseconds();
