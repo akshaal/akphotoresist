@@ -18,6 +18,7 @@ USE_REG$(tm1637__byte1, low);
 USE_REG$(tm1637__byte2, low);
 USE_REG$(tm1637__byte3, low);
 USE_REG$(tm1637__byte4, low);
+
 USE_REG$(state);
 
 X_CPU$(cpu_freq = 1061658);
@@ -118,9 +119,10 @@ FUNCTION$(void init_prepare_mode()) {
 // - - - - - - - - -  - - - - - - - Hour indication
 
 X_EVERY_DECISECOND$(hour_indicator) {
-    u8 const on =
-        (timestamp.get_hours_l() != 0 || timestamp.get_hours_h() != 0)
-        && (timestamp.get_deciseconds() & AKAT_ONE);
+    STATIC_VAR$(u8 blink);
+
+    u8 on = ((u8)((u8)timestamp.get_hours_l() + (u8)timestamp.get_hours_h())) & blink;
+    blink = ~blink;
 
     indicator_led.set(on);
 }
