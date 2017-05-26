@@ -66,7 +66,7 @@ X_TM1637_FLASH$(tm1637_flash, tm1637);
 X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
 X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=1000: e, b, a")
 X_BUZZER_RTTL$(stop_sounds, "d=1, o=5, b=1000: a, b, e")
-X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b., p, g6, f#6, e6, d6, e6, 2b.")
+X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
 X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
 FUNCTION$(void play_button_sound()) {
