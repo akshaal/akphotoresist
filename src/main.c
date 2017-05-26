@@ -36,7 +36,7 @@ typedef u8 predef_t;
 GLOBAL$() {
     STATIC_VAR$(state_t state, initial = STATE_PREPARE);
     STATIC_VAR$(predef_t predef, initial = PREDEF1);
-    STATIC_VAR$(u8 select_second);
+    STATIC_VAR$(u8 select_first);
 }
 
 // Declare error led and handler for fatal errors
@@ -89,7 +89,7 @@ X_COUNTDOWN$(countdown, timestamp) {
 // - - - - - - - - -  - - - - - - - Selection
 
 FUNCTION$(void stop_selection_flashing()) {
-    if (select_second) {
+    if (select_first) {
         tm1637_flash.stop_pos_1();
         tm1637_flash.stop_pos_2();
     } else {
@@ -99,7 +99,7 @@ FUNCTION$(void stop_selection_flashing()) {
 }
 
 FUNCTION$(void start_selection_flashing()) {
-    if (select_second) {
+    if (select_first) {
         tm1637_flash.start_pos_1();
         tm1637_flash.start_pos_2();
     } else {
@@ -110,7 +110,7 @@ FUNCTION$(void start_selection_flashing()) {
 
 FUNCTION$(void cycle_selection_flashing()) {
     stop_selection_flashing();
-    select_second = ~select_second;
+    select_first = ~select_first;
     start_selection_flashing();
 }
 
@@ -148,7 +148,7 @@ FUNCTION$(void cycle_predefs()) {
 
 FUNCTION$(void init_prepare_mode()) {
     state = STATE_PREPARE;
-    select_second = 0;
+    select_first = 0;
     set_predef1();
     start_selection_flashing();
 }
@@ -158,10 +158,39 @@ FUNCTION$(void init_prepare_mode()) {
 X_EVERY_DECISECOND$(hour_indicator) {
     STATIC_VAR$(u8 blink);
 
-    u8 on = ((u8)((u8)timestamp.get_hours_l() + (u8)timestamp.get_hours_h())) & blink;
+    u8 on = timestamp.has_hours() & blink;
     blink = ~blink;
 
     indicator_led.set(on);
+}
+
+// - - - - - - - - -  - - - - - - - Timestamp modifications
+FUNCTION$(void decrement_selection_position()) {
+    stop_selection_flashing();
+
+    if (select_first) {
+        if (timestamp.has_hours()) {
+            timestamp.dec_hours();
+        } else {
+            if (timestamp.has_minutes()) {
+                timestamp.dec_minutes();
+            } else {
+                timestamp.dec_seconds();
+            }
+        }
+    } else {
+        if (timestamp.has_hours()) {
+            timestamp.dec_minutes();
+        } else {
+            if (timestamp.has_minutes()) {
+                timestamp.dec_seconds();
+            } else {
+                timestamp.dec_deciseconds();
+            }
+        }
+    }
+
+    start_selection_flashing();
 }
 
 // - - - - - - - - -  - - - - - - - Buttons
@@ -179,7 +208,7 @@ X_BUTTON_REPEAT$(button1, D4) {
     METHOD$(void on_press()) {
         if (state == STATE_PREPARE) {
             play_button_sound();
-            // TODO: Decrement current position
+            decrement_selection_position();
         } else {
             init_prepare_mode_on_done_press();
         }
@@ -187,7 +216,7 @@ X_BUTTON_REPEAT$(button1, D4) {
 
     METHOD$(void on_repeat()) {
         if (state == STATE_PREPARE) {
-            // TODO: Decrement current position faster
+            decrement_selection_position();
         }
     }
 
