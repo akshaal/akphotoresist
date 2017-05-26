@@ -193,31 +193,6 @@ FUNCTION$(void decrement_selection_position()) {
 }
 
 FUNCTION$(void increment_selection_position()) {
-    stop_selection_flashing();
-
-    if (select_first) {
-        if (timestamp.has_hours()) {
-            timestamp.inc_hours();
-        } else {
-            if (timestamp.has_minutes()) {
-                timestamp.inc_minutes();
-            } else {
-                timestamp.inc_seconds();
-            }
-        }
-    } else {
-        if (timestamp.has_hours()) {
-            timestamp.inc_minutes();
-        } else {
-            if (timestamp.has_minutes()) {
-                timestamp.inc_seconds();
-            } else {
-                timestamp.inc_deciseconds();
-            }
-        }
-    }
-
-    start_selection_flashing();
 }
 
 
