@@ -38,6 +38,9 @@ GLOBAL$() {
     STATIC_VAR$(u8 select_first);
 }
 
+// Switch
+X_GPIO_OUTPUT$(switch_pin, D1);
+
 // Declare error led and handler for fatal errors
 X_GPIO_OUTPUT$(indicator_led, B0);
 X_FATAL_ERROR_HANDLER_LED$(indicator_led);
@@ -75,6 +78,7 @@ FUNCTION$(void play_button_sound()) {
 // Clock (timer) which controls timestamp
 X_COUNTDOWN$(countdown, timestamp) {
     METHOD$(void on_finish(), inline) {
+        switch_pin.set(0);
         buzzer.play(finish_sounds, NULL);
         state = STATE_DONE;
         tm1637.set_pos_1(AKAT_X_TM1637_C_D);
@@ -291,11 +295,13 @@ X_BUTTON_LONG$(button4, D3) {
 
     METHOD$(void on_long_press()) {
         if (state == STATE_PREPARE) {
+            switch_pin.set(1);
             stop_selection_flashing();
             state = STATE_COUNTDOWN;
             buzzer.play(start_sounds, NULL);
             countdown.start();
         } else if (state == STATE_COUNTDOWN) {
+            switch_pin.set(0);
             start_selection_flashing();
             state = STATE_PREPARE;
             buzzer.play(stop_sounds, NULL);
@@ -308,6 +314,7 @@ X_BUTTON_LONG$(button4, D3) {
 
 // Main
 X_MAIN$() {
+    switch_pin.set(0);
     init_prepare_mode();
     buzzer.play(startup_sounds, NULL);
     sei();
