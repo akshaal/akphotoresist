@@ -37,6 +37,7 @@ typedef u8 predef_t;
 GLOBAL$() {
     STATIC_VAR$(state_t state, initial = STATE_PREPARE);
     STATIC_VAR$(predef_t predef, initial = PREDEF1);
+    STATIC_VAR$(u8 select_first);
 }
 
 // Declare error led and handler for fatal errors
@@ -45,13 +46,6 @@ X_FATAL_ERROR_HANDLER_LED$(indicator_led);
 
 // Buzzer on PB2 (on attiny2313)
 X_BUZZER$(buzzer);
-
-// Sounds
-X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
-X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=1000: e, b, a")
-X_BUZZER_RTTL$(stop_sounds, "d=1, o=5, b=1000: a, b, e")
-X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
-X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
@@ -65,6 +59,21 @@ X_TM1637_TIME$(tm1637_time, timestamp, tm1637, condition = state != STATE_DONE);
 // Support for flashing of information on TM1637 display
 X_TM1637_FLASH$(tm1637_flash, tm1637);
 
+// - - - - - - - - -  - - - - - - - Sounds
+
+// Sounds
+X_BUZZER_RTTL$(startup_sounds, "d=1, o=5, b=500: c3, c4, c5")
+X_BUZZER_RTTL$(start_sounds, "d=1, o=5, b=1000: e, b, a")
+X_BUZZER_RTTL$(stop_sounds, "d=1, o=5, b=1000: a, b, e")
+X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
+X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
+
+FUNCTION$(void play_button_sound()) {
+    buzzer.play(button_sound, NULL);
+}
+
+// - - - - - - - - -  - - - - - - - Countdown
+
 // Clock (timer) which controls timestamp
 X_COUNTDOWN$(countdown, timestamp) {
     METHOD$(void on_finish(), inline) {
@@ -74,11 +83,36 @@ X_COUNTDOWN$(countdown, timestamp) {
         tm1637.set_pos_2(AKAT_X_TM1637_C_o);
         tm1637.set_pos_3(AKAT_X_TM1637_C_n);
         tm1637.set_pos_4(AKAT_X_TM1637_C_E);
+        tm1637_flash.start_all();
+    }
+}
+
+// - - - - - - - - -  - - - - - - - Selection
+
+FUNCTION$(void stop_selection_flashing()) {
+    if (select_first) {
+        tm1637_flash.stop_pos_1();
+        tm1637_flash.stop_pos_2();
+    } else {
+        tm1637_flash.stop_pos_3();
+        tm1637_flash.stop_pos_4();
+    }
+}
+
+FUNCTION$(void start_selection_flashing()) {
+    if (select_first) {
         tm1637_flash.start_pos_1();
         tm1637_flash.start_pos_2();
+    } else {
         tm1637_flash.start_pos_3();
         tm1637_flash.start_pos_4();
     }
+}
+
+FUNCTION$(void cycle_selection_flashing()) {
+    stop_selection_flashing();
+    select_first = ~select_first;
+    start_selection_flashing();
 }
 
 // - - - - - - - - -  - - - - - - - Predefs handling
@@ -102,6 +136,7 @@ FUNCTION$(void set_predef3()) {
 }
 
 FUNCTION$(void cycle_predefs()) {
+    stop_selection_flashing();
     if (predef == PREDEF1) {
         set_predef2();
     } else if (predef == PREDEF2) {
@@ -109,11 +144,14 @@ FUNCTION$(void cycle_predefs()) {
     } else {
         set_predef1();
     }
+    start_selection_flashing();
 }
 
 FUNCTION$(void init_prepare_mode()) {
     state = STATE_PREPARE;
+    select_first = 0;
     set_predef1();
+    start_selection_flashing();
 }
 
 // - - - - - - - - -  - - - - - - - Hour indication
@@ -132,11 +170,8 @@ X_EVERY_DECISECOND$(hour_indicator) {
 FUNCTION$(void init_prepare_mode_on_done_press()) {
     if (state == STATE_DONE) {
         // Order is important
-        buzzer.play(button_sound, NULL);
-        tm1637_flash.stop_pos_1();
-        tm1637_flash.stop_pos_2();
-        tm1637_flash.stop_pos_3();
-        tm1637_flash.stop_pos_4();
+        play_button_sound();
+        tm1637_flash.stop_all();
         init_prepare_mode();
     }
 }
@@ -144,7 +179,7 @@ FUNCTION$(void init_prepare_mode_on_done_press()) {
 X_BUTTON_REPEAT$(button1, D4) {
     METHOD$(void on_press()) {
         if (state == STATE_PREPARE) {
-            buzzer.play(button_sound, NULL);
+            play_button_sound();
             // TODO: Decrement current position
         } else {
             init_prepare_mode_on_done_press();
@@ -163,7 +198,7 @@ X_BUTTON_REPEAT$(button1, D4) {
 X_BUTTON_REPEAT$(button2, D5) {
     METHOD$(void on_press()) {
         if (state == STATE_PREPARE) {
-            buzzer.play(button_sound, NULL);
+            play_button_sound();
             // TODO: Increment current position
         } else {
             init_prepare_mode_on_done_press();
@@ -180,14 +215,18 @@ X_BUTTON_REPEAT$(button2, D5) {
 }
 
 X_BUTTON$(button3, D2) {
-    // TODO: Select current position
-    init_prepare_mode_on_done_press();
+    if (state == STATE_PREPARE) {
+        play_button_sound();
+        cycle_selection_flashing();
+    } else {
+        init_prepare_mode_on_done_press();
+    }
 }
 
 X_BUTTON_LONG$(button4, D3) {
     METHOD$(void on_press()) {
         if (state == STATE_PREPARE) {
-            buzzer.play(button_sound, NULL);
+            play_button_sound();
             cycle_predefs();
         } else {
             init_prepare_mode_on_done_press();
@@ -196,10 +235,12 @@ X_BUTTON_LONG$(button4, D3) {
 
     METHOD$(void on_long_press()) {
         if (state == STATE_PREPARE) {
+            stop_selection_flashing();
             state = STATE_COUNTDOWN;
             buzzer.play(start_sounds, NULL);
             countdown.start();
         } else if (state == STATE_COUNTDOWN) {
+            start_selection_flashing();
             state = STATE_PREPARE;
             buzzer.play(stop_sounds, NULL);
             countdown.stop();
