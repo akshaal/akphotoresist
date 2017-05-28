@@ -70,7 +70,7 @@ X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a,
 X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
 FUNCTION$(void play_button_sound()) {
-    buzzer.play(button_sound, NULL);
+    buzzer.play(button_sound);
 }
 
 // - - - - - - - - -  - - - - - - - Countdown
@@ -79,7 +79,7 @@ FUNCTION$(void play_button_sound()) {
 X_COUNTDOWN$(countdown, timestamp) {
     METHOD$(void on_finish(), inline) {
         switch_pin.set(0);
-        buzzer.play(finish_sounds, NULL);
+        buzzer.play(finish_sounds);
         state = STATE_DONE;
         tm1637.set_pos_1(AKAT_X_TM1637_C_D);
         tm1637.set_pos_2(AKAT_X_TM1637_C_o);
@@ -298,13 +298,13 @@ X_BUTTON_LONG$(button4, D3) {
             switch_pin.set(1);
             stop_selection_flashing();
             state = STATE_COUNTDOWN;
-            buzzer.play(start_sounds, NULL);
+            buzzer.play(start_sounds);
             countdown.start();
         } else if (state == STATE_COUNTDOWN) {
             switch_pin.set(0);
             start_selection_flashing();
             state = STATE_PREPARE;
-            buzzer.play(stop_sounds, NULL);
+            buzzer.play(stop_sounds);
             countdown.stop();
         }
     }
@@ -316,6 +316,6 @@ X_BUTTON_LONG$(button4, D3) {
 X_MAIN$() {
     switch_pin.set(0);
     init_prepare_mode();
-    buzzer.play(startup_sounds, NULL);
+    buzzer.play(startup_sounds);
     sei();
 }
