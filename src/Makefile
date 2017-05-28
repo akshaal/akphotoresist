@@ -21,7 +21,8 @@ firmware.avr: firmware.tmp.c
 		${NM} --print-size --size-sort --radix=d firmware.avr && \
 		${SIZE} $@ && \
 		${AKATV} firmware.avr.ltrans0.s && \
-		hex2bin firmware.hex
+		hex2bin firmware.hex && \
+		dos2unix firmware.hex
 
 clean:
 	rm -f *.ii *.o *.i *.s *.a *.avr *.tmp.c *.hex *.bin
