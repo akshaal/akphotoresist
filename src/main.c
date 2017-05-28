@@ -46,7 +46,7 @@ X_GPIO_OUTPUT$(indicator_led, B0);
 X_FATAL_ERROR_HANDLER_LED$(indicator_led);
 
 // Buzzer on PB2 (on attiny2313)
-X_BUZZER$(buzzer);
+X_BUZZER$(buzzer, no_callbacks);
 
 // Declare variable with timestamp (contains hh, mm, ss, decis)
 X_TIMESTAMP$(timestamp);
