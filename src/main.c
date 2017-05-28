@@ -8,7 +8,7 @@ WRITE_CFLAGS$(firmware);
 USE_REG$(state);
 USE_REG$(akat_timestamp_hour__timestamp, low);
 USE_REG$(akat_timestamp_minute__timestamp, low);
-USE_REG$(akat_timestamp_second__timestamp, low);
+USE_REG$(akat_timestamp_second__timestamp);
 USE_REG$(akat_timestamp_decisecond__timestamp, low);
 USE_REG$(akat_countdown_started__countdown, low);
 USE_REG$(buzzer__play_deciseconds, low);
