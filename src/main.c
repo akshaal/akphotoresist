@@ -175,20 +175,20 @@ FUNCTION$(void decrement_selection_position()) {
         if (select_first) {
             timestamp.dec_hours();
         } else {
-            timestamp.dec_minutes();
+            timestamp.dec_minutes(0);
         }
     } else {
         if (timestamp.has_minutes()) {
             if (select_first) {
-                timestamp.dec_minutes();
+                timestamp.dec_minutes(0);
             } else {
-                timestamp.dec_seconds();
+                timestamp.dec_seconds(0);
             }
         } else {
             if (select_first) {
-                timestamp.dec_seconds();
+                timestamp.dec_seconds(0);
             } else {
-                timestamp.dec_deciseconds();
+                timestamp.dec_deciseconds(0);
             }
         }
     }
@@ -203,20 +203,20 @@ FUNCTION$(void increment_selection_position()) {
         if (select_first) {
             timestamp.inc_hours();
         } else {
-            timestamp.inc_minutes();
+            timestamp.inc_minutes(0);
         }
     } else {
         if (timestamp.has_minutes()) {
             if (select_first) {
-                timestamp.inc_minutes();
+                timestamp.inc_minutes(0);
             } else {
-                timestamp.inc_seconds();
+                timestamp.inc_seconds(0);
             }
         } else {
             if (select_first) {
-                timestamp.inc_seconds();
+                timestamp.inc_seconds(0);
             } else {
-                timestamp.inc_deciseconds();
+                timestamp.inc_deciseconds(0);
             }
         }
     }
