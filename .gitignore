@@ -10,6 +10,5 @@
 *.res
 *.ii
 *.avr
-*.hex
 *.bin
 *.cflags
