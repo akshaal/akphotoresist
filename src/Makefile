@@ -4,6 +4,7 @@ include ${AKAT_DIR}/src/akat.Makefile
 
 MCU=attiny2313
 SRCS=main.c
+TUNING_SRC=tuning.c
 
 PROJ_CFLAGS=
 
@@ -11,8 +12,8 @@ all: firmware.avr
 
 distclean: clean
 
-firmware.tmp.c: ${SRCS} ${AKAT_SRCS}
-	${AKATPP} ${AKATPP_OPTS} ${AKAT_SRCS} ${SRCS} > "firmware.tmp.c" || rm "firmware.tmp.c"
+firmware.tmp.c: ${TUNING_SRC} ${SRCS} ${AKAT_SRCS}
+		${AKATPP} ${AKATPP_OPTS} ${TUNING_SRC} ${AKAT_SRCS} ${SRCS} > "firmware.tmp.c" || rm "firmware.tmp.c"
 
 firmware.avr: firmware.tmp.c
 	  XX=`cat firmware.cflags` && ${CC} -Os ${CFLAGS} ${PROJ_CFLAGS} $$XX "$<" -save-temps -o $@ && \
