@@ -4,6 +4,7 @@
 *.tmp.cpp
 *.tmp.c
 *.s
+*.inline
 *.o
 *.out
 *.i

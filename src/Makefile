@@ -6,7 +6,7 @@ MCU=attiny2313
 SRCS=main.c
 TUNING_SRC=tuning.c
 
-PROJ_CFLAGS=
+PROJ_CFLAGS=-fdump-ipa-inline
 
 all: firmware.avr
 
