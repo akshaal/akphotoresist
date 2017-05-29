@@ -56,7 +56,7 @@ X_TIMESTAMP$(timestamp);
 // Define display
 X_TM1637$(tm1637, clk = B3, dio = B4);
 
-// Connect display to timestamp, condition tells when we display data
+// Connect display to timestamp, condition tells when we display timestamp
 X_TM1637_TIME$(tm1637_time, timestamp, tm1637, condition = state != STATE_DONE);
 
 // Support for flashing of information on TM1637 display
