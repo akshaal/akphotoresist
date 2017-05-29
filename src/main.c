@@ -38,6 +38,9 @@ GLOBAL$() {
     STATIC_VAR$(u8 select_first);
 }
 
+// Watchdog
+X_WATCHDOG$(8s);
+
 // Switch
 X_GPIO_OUTPUT$(switch_pin, D1);
 
