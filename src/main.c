@@ -78,11 +78,11 @@ FUNCTION$(void play_button_sound()) {
 
 // - - - - - - - - -  - - - - - - - Unused pins
 
-// For safety reasons we them to read with pull up
+// For safety reasons we set them to read with pull up
 X_UNUSED_PIN$(B1);
-X_UNUSED_PIN$(B5);
-X_UNUSED_PIN$(B6);
-X_UNUSED_PIN$(B7);
+X_UNUSED_PIN$(B5); // MOSI
+X_UNUSED_PIN$(B6); // MISO
+X_UNUSED_PIN$(B7); // SCL
 X_UNUSED_PIN$(D0);
 X_UNUSED_PIN$(D6);
 
