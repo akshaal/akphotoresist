@@ -76,6 +76,13 @@ FUNCTION$(void play_button_sound()) {
     buzzer.play(button_sound);
 }
 
+// - - - - - - - - -  - - - - - - - Unused pins
+
+// For safety reasons we them to read with pull up
+X_GPIO_INPUT$(unused1, B1);
+X_GPIO_INPUT$(unused2, D0);
+X_GPIO_INPUT$(unused3, D6);
+
 // - - - - - - - - -  - - - - - - - Countdown
 
 // Clock (timer) which controls timestamp
