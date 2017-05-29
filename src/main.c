@@ -54,7 +54,7 @@ X_BUZZER_RTTL$(stop_sounds, "d=1, o=5, b=1000: a, b, e")
 X_BUZZER_RTTL$(finish_sounds, "d=1, o=5, b=170: e, b, a, b, d6, 2b., p, e, b, a, b, e6, 2b.")
 X_BUZZER_SOUNDS$(button_sound, sounds = (1 @ 1000))
 
-FUNCTION$(void play_button_sound()) {
+FUNCTION$(void play_button_sound(), no_inline) {
     buzzer.play(button_sound);
 }
 
