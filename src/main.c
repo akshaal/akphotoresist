@@ -3,7 +3,6 @@
 
 WRITE_CFLAGS$(firmware);
 
-// TODO: Remove it and add again based upon frequency produced by akatv
 // NOTE: Sometimes it's nice to try to see which one is best to have some not low, must try some combinations
 USE_REG$(state);
 USE_REG$(akat_timestamp_hour__timestamp, low);
