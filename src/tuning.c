@@ -15,5 +15,5 @@ USE_REG$(button1__delay, low);
 USE_REG$(tm1637__dirty, low);
 USE_REG$(select_first, low);
 
-TUNE_FUNCTION$(akat_bcd_inc, pure, const, no_inline);
-TUNE_FUNCTION$(akat_bcd_dec, pure, const, no_inline);
+TUNE_FUNCTION$(akat_bcd_inc, pure, no_inline);
+TUNE_FUNCTION$(akat_bcd_dec, pure, no_inline);
